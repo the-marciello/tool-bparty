@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # Avvia l'aggiornamento iniziale
     update_leaderboard()
     
-    root.attributes("-fullscreen", True)
+    # root.attributes("-fullscreen", True)
     
     # Avvia la finestra principale
     root.mainloop()
