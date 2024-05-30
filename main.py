@@ -30,6 +30,7 @@ def Response(msg):
         
         squadra, punteggio = text.rsplit(' ', 1)
         punteggio = int(punteggio.strip('[]'))
+        squadra = squadra.replace(' ', '')
         
         if squadra in classifica:
             classifica[squadra] += punteggio
@@ -37,11 +38,19 @@ def Response(msg):
             classifica[squadra] = punteggio
 
         save_classifica(classifica)    
-        bot.sendMessage(chat_id, f'Classifica aggiornata: {classifica}')
+        bot.sendMessage(chat_id, f'Classifica aggiornata:\n {toString(classifica)}')
     
     except Exception as e:
         bot.sendMessage(chat_id, 'Formato messaggio non valido. Usa "{nome squadra} [punteggio]"')
     
+def toString(classifica):
+    r = ""
+    i = 1
+    for key, value in classifica.items():
+        if value != 0:  # Controlla se il valore è diverso da zero
+            r += f"{i}) {key.replace(' ', '')} - {value}\n"
+            i += 1
+    return r
 
 
 if __name__=='__main__':

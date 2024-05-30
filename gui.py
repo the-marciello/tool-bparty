@@ -18,7 +18,7 @@ def update_leaderboard():
         widget.destroy()
 
     # Crea le intestazioni
-    header = tk.Label(frame, text="RANK    PLAYER NAME    SCORE", bg='black', fg='green', font=('digital-7', 57, 'bold'))
+    header = tk.Label(frame, text=f"{'RANK':<6} {'PLAYER NAME':<15} {'SCORE':<5}", bg='black', fg='green', font=('Courier', 50, 'bold'))
     header.pack()
 
     # Inserisci i dati nella tabella con un loop
@@ -30,7 +30,7 @@ def update_leaderboard():
         else:
             fg_color = 'blue'
         
-        entry = tk.Label(frame, text=f"{rank:<6} {player:<15} {score:<5}", bg='black', fg=fg_color, font=('digital-7', 57, 'bold'))
+        entry = tk.Label(frame, text=f"{rank:<6} {player:<15} {score:<5}", bg='black', fg=fg_color, font=('Courier', 50, 'bold'))
         entry.pack()
 
     # Richiama nuovamente la funzione dopo 0.1 secondi
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     root.configure(bg='black')
 
     # Crea un titolo
-    title = tk.Label(root, text="CLASSIFICA", bg='black', fg='green', font=('digital-7', 100, 'bold'))
+    title = tk.Label(root, text="CLASSIFICA", bg='black', fg='green', font=('Courier', 90, 'bold'))
     title.pack(pady=10)
 
     # Crea un frame per contenere la tabella
