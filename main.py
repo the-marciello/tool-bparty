@@ -3,9 +3,13 @@ from telepot.loop import MessageLoop
 import json
 import threading
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Token del tuo bot
-TOKEN = '7439868215:AAGvEQx7ED8vyVoY4j7OqEzD-slpj5TA1xo'
+TOKEN = os.getenv('TOKEN')
+
 FILE_PATH = 'classifica.json'
 
 class ClassificaBot:
@@ -48,4 +52,6 @@ class ClassificaBot:
 
 if __name__ == '__main__':
     bot = ClassificaBot(TOKEN, FILE_PATH)
+    print("Avviando...")
     threading.Thread(target=bot.run).start()
+    print("Avviato con successo!")
