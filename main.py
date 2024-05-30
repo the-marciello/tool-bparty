@@ -10,7 +10,7 @@ load_dotenv()
 # Token del tuo bot
 TOKEN = os.getenv('TOKEN')
 
-FILE_PATH = 'classifica.json'
+FILE_PATH = './.gitignore/classifica.json'
 
 class ClassificaBot:
     def __init__(self, token, file_path):

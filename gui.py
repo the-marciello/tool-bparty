@@ -4,7 +4,7 @@ import tkinter as tk
 # Funzione per aggiornare la classifica
 def update_leaderboard():
     # Carica i dati dal file JSON
-    with open('classifica.json', 'r') as file:
+    with open('./.gitignore/classifica.json', 'r') as file:
         data = json.load(file)
 
     # Trasforma i dati in una lista di tuple e ordina per punteggio
