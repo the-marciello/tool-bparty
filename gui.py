@@ -1,17 +1,23 @@
 import tkinter as tk
 import json
-class ScoreBoardGUI:
+
+def load():
+    with open('classifica.json', 'r') as file:
+        dati = json.load(file)
+
+    lista_tuple = [(k, v) for k, v in dati.items()]
+
+    matrice = []
+
+    for coppia in lista_tuple:
+        matrice.append(list(coppia))
+
+
+if __name__ == '__main__':
     window = tk.Tk()
 
+    window.configure(bg='black')
+
     window.geometry("160x190")
-
-    window.title("SCOREBOARD")
-
-    window.resizable(False, False)
-
-    window.configure(background="white")
-    # uncomment this line to activate fullscreen mode
-    # window.attributes("-fullscreen", True)
-
-    if __name__ == "__main__":
-        window.mainloop()
+    #window.attributes("-fullscreen", True)
+    window.mainloop()
