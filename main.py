@@ -1,57 +1,54 @@
-import telepot
 from telepot.loop import MessageLoop
-import json
-import threading
-import os
+import telepot, os, json, time, re
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# Token del tuo bot
 TOKEN = os.getenv('TOKEN')
+FILE_PATH = 'classifica.json'
 
-FILE_PATH = './.gitignore/classifica.json'
 
-class ClassificaBot:
-    def __init__(self, token, file_path):
-        self.bot = telepot.Bot(token)
-        self.file_path = file_path
-        self.classifica = self.load_classifica()
+def load_classifica():
+    if os.path.exists(FILE_PATH):
+        with open(FILE_PATH, 'r') as file:
+            return json.load(file)
+    else:
+        return {}
 
-    def load_classifica(self):
-        if os.path.exists(self.file_path):
-            with open(self.file_path, 'r') as file:
-                return json.load(file)
+def save_classifica(classifica):
+    with open(FILE_PATH, 'w') as file:
+        json.dump(classifica, file, indent=4)
+
+def Response(msg):
+    
+    classifica = load_classifica()
+    
+    chat_id = msg['chat']['id']
+    
+    try:
+        text = msg['text'] # squadra punteggio
+        
+        squadra, punteggio = text.rsplit(' ', 1)
+        punteggio = int(punteggio.strip('[]'))
+        
+        if squadra in classifica:
+            classifica[squadra] += punteggio
         else:
-            return {}
+            classifica[squadra] = punteggio
 
-    def save_classifica(self):
-        with open(self.file_path, 'w') as file:
-            json.dump(self.classifica, file, indent=4)
+        save_classifica(classifica)    
+        bot.sendMessage(chat_id, f'Classifica aggiornata: {classifica}')
+    
+    except Exception as e:
+        bot.sendMessage(chat_id, 'Formato messaggio non valido. Usa "{nome squadra} [punteggio]"')
+    
 
-    def handle(self, msg):
-        content_type, chat_type, chat_id = telepot.glance(msg)
-        if content_type == 'text':
-            try:
-                text = msg['text']
-                name, score = text.rsplit(' ', 1)
-                score = int(score.strip('[]'))
-                if name in self.classifica:
-                    self.classifica[name] += score
-                else:
-                    self.classifica[name] = score
-                self.save_classifica()
-                self.bot.sendMessage(chat_id, f'Classifica aggiornata: {self.classifica}')
-            except Exception as e:
-                self.bot.sendMessage(chat_id, 'Formato messaggio non valido. Usa "{nome squadra} [punteggio]"')
 
-    def run(self):
-        MessageLoop(self.bot, self.handle).run_as_thread()
-        while True:
-            pass
-
-if __name__ == '__main__':
-    bot = ClassificaBot(TOKEN, FILE_PATH)
+if __name__=='__main__':
     print("Avviando...")
-    threading.Thread(target=bot.run).start()
+    classifica = load_classifica()
+    bot = telepot.Bot(TOKEN)
+    MessageLoop(bot, Response).run_as_thread()
     print("Avviato con successo!")
+    while True:
+        time.sleep(10)
