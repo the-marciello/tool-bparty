@@ -18,7 +18,7 @@ def update_leaderboard():
         widget.destroy()
 
     # Crea le intestazioni
-    header = tk.Label(frame, text="RANK    PLAYER NAME    SCORE", bg='black', fg='green', font=('Courier', 18, 'bold'))
+    header = tk.Label(frame, text="RANK    PLAYER NAME    SCORE", bg='black', fg='green', font=('digital-7', 18, 'bold'))
     header.pack()
 
     # Inserisci i dati nella tabella con un loop
@@ -30,27 +30,28 @@ def update_leaderboard():
         else:
             fg_color = 'blue'
         
-        entry = tk.Label(frame, text=f"{rank:<6} {player:<15} {score:<5}", bg='black', fg=fg_color, font=('Courier', 18, 'bold'))
+        entry = tk.Label(frame, text=f"{rank:<6} {player:<15} {score:<5}", bg='black', fg=fg_color, font=('digital-7', 18, 'bold'))
         entry.pack()
 
     # Richiama nuovamente la funzione dopo 30 secondi
-    root.after(5000, update_leaderboard)
+    root.after(100, update_leaderboard)
 
-# Crea la finestra principale
-root = tk.Tk()
-root.title("Classifica")
-root.configure(bg='black')
+if __name__ == '__main__':
+    # Crea la finestra principale
+    root = tk.Tk()
+    root.title("Classifica")
+    root.configure(bg='black')
 
-# Crea un titolo
-title = tk.Label(root, text="CLASSIFICA", bg='black', fg='green', font=('Courier', 24, 'bold'))
-title.pack(pady=10)
+    # Crea un titolo
+    title = tk.Label(root, text="CLASSIFICA", bg='black', fg='green', font=('digital-7', 24, 'bold'))
+    title.pack(pady=10)
 
-# Crea un frame per contenere la tabella
-frame = tk.Frame(root, bg='black')
-frame.pack(pady=10)
+    # Crea un frame per contenere la tabella
+    frame = tk.Frame(root, bg='black')
+    frame.pack(pady=10)
 
-# Avvia l'aggiornamento iniziale
-update_leaderboard()
-
-# Avvia la finestra principale
-root.mainloop()
+    # Avvia l'aggiornamento iniziale
+    update_leaderboard()
+    
+    # Avvia la finestra principale
+    root.mainloop()
