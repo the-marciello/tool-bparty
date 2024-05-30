@@ -46,9 +46,12 @@ def Response(msg):
 
 if __name__=='__main__':
     print("Avviando...")
+    
     classifica = load_classifica()
     bot = telepot.Bot(TOKEN)
     MessageLoop(bot, Response).run_as_thread()
+    
     print("Avviato con successo!")
+    
     while True:
         time.sleep(10)
