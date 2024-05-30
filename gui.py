@@ -1,23 +1,56 @@
-import tkinter as tk
 import json
+import tkinter as tk
 
-def load():
+# Funzione per aggiornare la classifica
+def update_leaderboard():
+    # Carica i dati dal file JSON
     with open('classifica.json', 'r') as file:
-        dati = json.load(file)
+        data = json.load(file)
 
-    lista_tuple = [(k, v) for k, v in dati.items()]
+    # Trasforma i dati in una lista di tuple e ordina per punteggio
+    classifica = sorted(data.items(), key=lambda item: item[1], reverse=True)
 
-    matrice = []
+    # Aggiungi il rank
+    classifica = [(i + 1, squadra, punteggio) for i, (squadra, punteggio) in enumerate(classifica)]
 
-    for coppia in lista_tuple:
-        matrice.append(list(coppia))
+    # Elimina tutti i widget attualmente presenti nella finestra
+    for widget in frame.winfo_children():
+        widget.destroy()
 
+    # Crea le intestazioni
+    header = tk.Label(frame, text="RANK    PLAYER NAME    SCORE", bg='black', fg='green', font=('Courier', 18, 'bold'))
+    header.pack()
 
-if __name__ == '__main__':
-    window = tk.Tk()
+    # Inserisci i dati nella tabella con un loop
+    for rank, player, score in classifica:
+        if rank == 1:
+            fg_color = 'yellow'
+        elif 2 <= rank <= 5:
+            fg_color = 'red'
+        else:
+            fg_color = 'blue'
+        
+        entry = tk.Label(frame, text=f"{rank:<6} {player:<15} {score:<5}", bg='black', fg=fg_color, font=('Courier', 18, 'bold'))
+        entry.pack()
 
-    window.configure(bg='black')
+    # Richiama nuovamente la funzione dopo 30 secondi
+    root.after(5000, update_leaderboard)
 
-    window.geometry("160x190")
-    #window.attributes("-fullscreen", True)
-    window.mainloop()
+# Crea la finestra principale
+root = tk.Tk()
+root.title("Classifica")
+root.configure(bg='black')
+
+# Crea un titolo
+title = tk.Label(root, text="CLASSIFICA", bg='black', fg='green', font=('Courier', 24, 'bold'))
+title.pack(pady=10)
+
+# Crea un frame per contenere la tabella
+frame = tk.Frame(root, bg='black')
+frame.pack(pady=10)
+
+# Avvia l'aggiornamento iniziale
+update_leaderboard()
+
+# Avvia la finestra principale
+root.mainloop()
