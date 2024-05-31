@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
+TOKEN = '7439868215:AAGvEQx7ED8vyVoY4j7OqEzD-slpj5TA1xo'
 FILE_PATH = 'classifica.json'
 
 
@@ -27,26 +28,45 @@ Buonasera!
 Se sei finito su questo bot, probabilmente è perché sei del Clan Halley!
 Devi gestire un gioco? Niente di più semplice!
 
-Manda un messaggio come questo
-nomesquadra punteggio (esempio: squadra1 100)
+Per creare una squadra usa il seguente comando:
+/crea <nome squadra>
 
-In questo modo se non esiste una squadra con tale nome viene creata,
-altrimenti i punti verranno aggiunti alla squadra
+Per aggiungere punteggio ad una squadra usa la seguente sintassi:
+<nome squadra> <punteggio> (se non esiste la squadra devi crearla!)
 
+Per visualizzare questo messaggio usa:
+/help oppure /start
 
---bot sviluppato da @marcedebe
-    
-    '''
+Per visualizzare la classifica usa:
+/classifica
+
+--bot sviluppato da @marcedebe'''
 
 def Response(msg):
     
     classifica = load_classifica()
     
     chat_id = msg['chat']['id']
-    text = msg['text'] # squadra punteggio
+    text = msg['text'].lower() # squadra punteggio
     
     if(text == "/start" or text == "/help" ):
         bot.sendMessage(chat_id, help())
+
+    elif(text.startswith("/crea")):
+        txt = text.split(' ', 1)
+
+        squadra = txt[1] if len(txt) > 1 else ""
+
+        classifica[squadra] = 0
+        
+        save_classifica(classifica)   
+
+        bot.sendMessage(chat_id, f'Squadra {squadra} aggiunta!') 
+
+
+    elif(text == "/classifica"):
+        bot.sendMessage(chat_id, toString(classifica))
+
     else:
         try:
             squadra, punteggio = text.rsplit(' ', 1)
@@ -56,7 +76,7 @@ def Response(msg):
             if squadra in classifica:
                 classifica[squadra] += punteggio
             else:
-                classifica[squadra] = punteggio
+                bot.sendMessage(chat_id, f'Squadra {squadra} non trovata, per aggiungerne una nuova usa /crea ' + '{nome squadra}')
 
             save_classifica(classifica)    
             bot.sendMessage(chat_id, f'Classifica aggiornata:\n {toString(classifica)}')
@@ -68,7 +88,8 @@ def toString(classifica):
     r = ""
     i = 1
     for key, value in classifica.items():
-        if value != 0:  # Controlla se il valore è diverso da zero
+        if(not 'fyreck' in key):
+        # if value != 0:  # Controlla se il valore è diverso da zero
             r += f"{i}) {key.replace(' ', '')} - {value}\n"
             i += 1
     return r
