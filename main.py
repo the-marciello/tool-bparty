@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv('BOT_TOKEN')
+TOKEN = os.getenv('TOKEN')
 FILE_PATH = 'classifica.json'
 
 REAL_CLASSIFICA = {
@@ -104,7 +104,7 @@ def Response(msg):
         reset()
         bot.sendMessage(chat_id, "Classifica resettata con successo!")
 
-    elif(text == "/palle" ):
+    elif(text == "/clear" ):
         bot.sendMessage(chat_id, "Stai forse provando a barare? Non hai i permessi necessari per poter eliminare la classifica!")
 
         with open('furbetti.txt', 'a') as f:
