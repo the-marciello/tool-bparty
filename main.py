@@ -5,8 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv('TOKEN')
-TOKEN = '7439868215:AAGvEQx7ED8vyVoY4j7OqEzD-slpj5TA1xo'
+TOKEN = os.getenv('BOT_TOKEN')
 FILE_PATH = 'classifica.json'
 
 REAL_CLASSIFICA = {
