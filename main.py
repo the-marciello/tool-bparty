@@ -98,8 +98,10 @@ def Response(msg):
             bot.sendMessage(chat_id, "Controlla di aver scritto tutto correttamente!")
 
     elif(text == "/classifica"):
-        bot.sendMessage(chat_id, toString(classifica))
-
+        try:
+            bot.sendMessage(chat_id, toString(classifica))
+        except Exception as e:
+            bot.sendMessage(chat_id, "Classifica vuota!")
     elif(text == "/clear" and chat_id == 952956053):
         reset()
         bot.sendMessage(chat_id, "Classifica resettata con successo!")
