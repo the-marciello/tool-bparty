@@ -1,6 +1,7 @@
 from telepot.loop import MessageLoop
-import telepot, os, json, time, re
+import telepot, os, json, time, datetime
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -8,7 +9,18 @@ TOKEN = os.getenv('TOKEN')
 TOKEN = '7439868215:AAGvEQx7ED8vyVoY4j7OqEzD-slpj5TA1xo'
 FILE_PATH = 'classifica.json'
 
-
+REAL_CLASSIFICA = {
+    "fyreck": 0,
+    "fyreck ": 0,
+    "fyreck  ": 0,
+    "fyreck   ": 0,
+    "fyreck    ": 0,
+    "fyreck     ": 0,
+    "fyreck      ": 0,
+    "fyreck       ": 0,
+    "fyreck        ": 0,
+    "fyreck         ": 0
+}
 
 def load_classifica():
     if os.path.exists(FILE_PATH):
@@ -16,6 +28,15 @@ def load_classifica():
             return json.load(file)
     else:
         return {}
+    
+def reset():    
+    if os.path.exists(FILE_PATH):
+        with open(FILE_PATH, 'w') as file:
+            return json.dump(REAL_CLASSIFICA, file, ensure_ascii=False, indent=4)
+
+    else:
+        return {}
+    
 
 def save_classifica(classifica):
     with open(FILE_PATH, 'w') as file:
@@ -44,28 +65,52 @@ Per visualizzare la classifica usa:
 
 def Response(msg):
     
+
     classifica = load_classifica()
     
     chat_id = msg['chat']['id']
     text = msg['text'].lower() # squadra punteggio
+
+    with open('user.txt', 'a') as log:
+        ora = datetime.datetime.now()
+        ora = ora.strftime("%H:%M:%S")
+
+        username = msg['chat']['username']
+        
+        log.write(f'{ora} - {username} HA SCRITTO {text}\n')
     
     if(text == "/start" or text == "/help" ):
         bot.sendMessage(chat_id, help())
-
-    elif(text.startswith("/crea")):
-        txt = text.split(' ', 1)
-
-        squadra = txt[1] if len(txt) > 1 else ""
-
-        classifica[squadra] = 0
         
-        save_classifica(classifica)   
+    elif(text.startswith("/crea")):
+        try:
+            txt = text.split(' ', 1)
 
-        bot.sendMessage(chat_id, f'Squadra {squadra} aggiunta!') 
+            squadra = txt[1]
 
+            classifica[squadra] = 0
+            
+            save_classifica(classifica)   
+
+            bot.sendMessage(chat_id, f'Squadra {squadra} aggiunta!') 
+            bot.sendMessage(chat_id, toString(classifica))
+
+        except Exception as e:
+            bot.sendMessage(chat_id, "Controlla di aver scritto tutto correttamente!")
 
     elif(text == "/classifica"):
         bot.sendMessage(chat_id, toString(classifica))
+
+    elif(text == "/clear" and chat_id == 952956053):
+        reset()
+        bot.sendMessage(chat_id, "Classifica resettata con successo!")
+
+    elif(text == "/palle" ):
+        bot.sendMessage(chat_id, "Stai forse provando a barare? Non hai i permessi necessari per poter eliminare la classifica!")
+
+        with open('furbetti.txt', 'a') as f:
+            f.write(f'chat id: {chat_id}\tusername: {msg['chat']['username']}\tnome: {msg['chat']['first_name']}\n')
+
 
     else:
         try:
